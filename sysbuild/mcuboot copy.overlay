@@ -1,0 +1,39 @@
+/* Overlay to apply to MCUboot domain */
+
+&sram {
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	/* RW6XX SRAM can be access by either code or data bus, determined
+	 * by the address used to access the memory.
+	 * Applications can override the reg properties of either
+	 * sram_data or sram_code nodes to change the balance of SRAM access partitioning.
+	 */
+	sram_data_boot: memory@10000 {
+		compatible = "mmio-sram";
+		reg = <0x10000 DT_SIZE_K(64)>;
+	};
+
+	sram_code_boot: memory@0 {
+		compatible = "mmio-sram";
+		reg = <0x00000000 DT_SIZE_K(64)>;
+	};
+
+	sram_data_appl: memory@40000 {
+		compatible = "mmio-sram";
+		reg = <0x40000 DT_SIZE_K(1280)>;
+	};
+
+	sram_code_appl: memory@20000 {
+		compatible = "mmio-sram";
+		reg = <0x00020000 DT_SIZE_K(128)>;
+	};
+};
+
+/ {
+	chosen {
+        zephyr,sram=&sram_data_boot;
+		/* With Sysbuild, enforce MCUboot code in boot_partition */
+		zephyr,code-partition = &boot_partition;
+	};
+};

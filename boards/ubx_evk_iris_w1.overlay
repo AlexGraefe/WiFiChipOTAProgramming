@@ -1,0 +1,54 @@
+/*
+ * Copyright 2025 u-blox AG
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+
+ &flexcomm0 {
+	compatible = "nxp,lpc-spi";
+	pinctrl-0 = <&pinmux_flexcomm0_spi>;
+	pinctrl-names = "default";
+	status = "okay";
+	clock-frequency = <7000000>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+};
+
+&sram {
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	/* RW6XX SRAM can be access by either code or data bus, determined
+	 * by the address used to access the memory.
+	 * Applications can override the reg properties of either
+	 * sram_data or sram_code nodes to change the balance of SRAM access partitioning.
+	 */
+
+	sram_appl: memory@0 {
+		compatible = "mmio-sram";
+		reg = <0x0000000 DT_SIZE_K(1088)>;
+	};
+
+	sram_boot: memory@109B00 {
+		compatible = "mmio-sram";
+		reg = <0x109A00 DT_SIZE_K(64)>;
+	};
+};
+
+/ {
+	aliases {
+		spi = &flexcomm0;
+		flash0 = &fm25m6413ibe;
+	};
+
+	chosen {
+		zephyr,sram = &sram_appl;
+		zephyr,flash = &sram_appl;
+	};
+};
+
+
+&standby {
+	status = "okay";
+};

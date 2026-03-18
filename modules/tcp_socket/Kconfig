@@ -1,0 +1,12 @@
+config TCP_SOCKET
+    bool "TCP socket demo client for WiFi-enabled chips"
+    default n
+    help
+        Provides run_tcp_socket_demo() to connect via WiFi and exchange
+        messages with a TCP server.
+
+config TCP_SOCKET_THREAD_STACK_SIZE
+    int "Stack size for the TCP socket demo thread"
+    default 2048
+    help
+        This option sets the stack size for the thread running the TCP socket demo.

@@ -1,0 +1,4 @@
+name: tcp_socket
+build:
+  cmake: .
+  kconfig: Kconfig
